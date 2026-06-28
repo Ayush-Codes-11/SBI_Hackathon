@@ -1,5 +1,29 @@
-// Mock customer profiles with pre-computed AI predictions
-// These simulate what the Gemini API will return in Phase 3 backend work
+/**
+ * Mock customer profiles with pre-computed AI predictions.
+ * These simulate what the Gemini API will return in Phase 3 backend work.
+ *
+ * ─── DATA SOURCES (all within SBI ecosystem — no external data used) ───────
+ *
+ * 1. yonoSearchHistory  → Search queries made INSIDE the YONO / SBI app only
+ *                         (product search, loan calculator, branch locator etc.)
+ *                         NOT browser history. NOT Google search.
+ *
+ * 2. travelSpend        → MCC-categorised spend on SBI Debit/Credit cards
+ *                         (MCC 3000–3999 Airlines, 4411 Cruise, 7011 Hotels)
+ *                         NOT PhonePe / Google Pay / UPI data from other apps.
+ *
+ * 3. salaryCredits      → NEFT/NACH credits to the SBI savings/current account
+ *                         as visible in core banking — bank's own transaction data.
+ *
+ * 4. creditScore        → Fetched from CIBIL/Experian via customer's written
+ *                         consent during account opening (RBI mandate).
+ *
+ * 5. balance            → SBI account balance — core banking, always legitimate.
+ *
+ * Legal basis: IT Act 2000, RBI Master Direction on Digital Lending 2022,
+ *              DPDP Act 2023 (consent-based processing), SEBI/IRDAI as applicable.
+ * ────────────────────────────────────────────────────────────────────────────
+ */
 
 export const MOCK_CUSTOMERS = [
   {
@@ -14,17 +38,35 @@ export const MOCK_CUSTOMERS = [
     city: "Delhi",
     avatar: "RS",
     avatarColor: "#1A73E8",
-    searchHistory: ["MS in Germany", "IELTS coaching", "GRE preparation", "student visa"],
-    travelSpend: [1200, 3400, 8900],
+
+    // Searches made inside YONO app (product search / loan calculator)
+    yonoSearchHistory: [
+      "Education loan for Germany",
+      "IELTS preparation loan",
+      "Forex card for students",
+      "Study abroad insurance",
+    ],
+    yonoSearchHistoryHi: [
+      "जर्मनी के लिए शिक्षा ऋण",
+      "IELTS तैयारी ऋण",
+      "छात्रों के लिए फॉरेक्स कार्ड",
+      "विदेश अध्ययन बीमा",
+    ],
+
+    // SBI account transaction history — all channels (UPI, card, ATM, NEFT) flow
+    // through CBS; travel-category debits identified by merchant name / MCC / VPA
+    travelSpend: [1200, 3400, 8900],   // ₹ per month, last 3 months
+
     existingProducts: ["Savings Account", "Debit Card"],
+
     prediction: {
       lifeEvent: "Higher Education Abroad",
       lifeEventHi: "विदेश में उच्च शिक्षा",
       confidence: 92,
       reasoning:
-        "Search history shows consistent queries for MS programs in Germany and IELTS coaching. Travel spending has increased 640% over 3 months. Salary pattern is stable — student planning abroad.",
+        "YONO app search history shows repeated queries for education loans and student forex products. SBI account transaction history (all channels: UPI, card, ATM) shows travel-category spend rose 640% over 3 months. Salary credits stable — student planning departure.",
       reasoningHi:
-        "सर्च हिस्ट्री में जर्मनी में MS प्रोग्राम और IELTS कोचिंग की लगातार खोजें दिखती हैं। 3 महीनों में यात्रा खर्च 640% बढ़ा है।",
+        "YONO ऐप में शिक्षा ऋण और स्टूडेंट फॉरेक्स उत्पादों की बार-बार खोजें। SBI खाते के लेनदेन इतिहास (UPI, कार्ड, ATM सभी चैनल) में यात्रा-श्रेणी खर्च 3 महीनों में 640% बढ़ा। वेतन क्रेडिट स्थिर हैं।",
       products: [
         {
           id: "edu_loan",
@@ -91,17 +133,32 @@ export const MOCK_CUSTOMERS = [
     city: "Bengaluru",
     avatar: "PM",
     avatarColor: "#FF4E6A",
-    searchHistory: ["2BHK Whitefield", "home loan EMI calculator", "property registration charges"],
+
+    // YONO in-app searches (loan calculator, branch/property links clicked within app)
+    yonoSearchHistory: [
+      "Home loan EMI calculator",
+      "MaxGain home loan eligibility",
+      "Home insurance for loan",
+    ],
+    yonoSearchHistoryHi: [
+      "होम लोन EMI कैलकुलेटर",
+      "मैक्सगेन होम लोन पात्रता",
+      "ऋण के लिए होम बीमा",
+    ],
+
+    // SBI account transaction history — real-estate category debits (all channels)
     travelSpend: [4200, 3800, 3100],
+
     existingProducts: ["Savings Account", "Debit Card", "Mutual Funds"],
+
     prediction: {
       lifeEvent: "First Home Purchase",
       lifeEventHi: "पहला घर खरीदना",
       confidence: 87,
       reasoning:
-        "Property-related searches for 2BHK in premium locations, EMI calculator queries, and high stable income of ₹95K+/month indicate active home purchase intent.",
+        "YONO app shows repeated use of the home loan EMI calculator and MaxGain eligibility checker. SBI account transaction history shows real-estate service charges (all channels including UPI to property consultants) over 3 months. Stable salary of ₹95K+/month supports a ₹75L loan.",
       reasoningHi:
-        "प्रीमियम स्थानों में 2BHK के लिए प्रॉपर्टी सर्च, EMI कैलकुलेटर प्रश्न और ₹95K+/माह की स्थिर आय सक्रिय घर खरीद की मंशा दर्शाती है।",
+        "YONO ऐप में होम लोन EMI कैलकुलेटर और मैक्सगेन पात्रता जांच का बार-बार उपयोग। SBI खाते के लेनदेन इतिहास (UPI सहित सभी चैनल) में रियल-एस्टेट सेवा शुल्क। ₹95K+/माह की स्थिर आय ₹75L ऋण का समर्थन करती है।",
       products: [
         {
           id: "home_loan",
@@ -142,8 +199,10 @@ export const MOCK_CUSTOMERS = [
       ],
       escalate: true,
       loanAmount: 7500000,
-      escalationReason: "Loan amount ₹75L exceeds ₹50L threshold. Requires Relationship Manager review per RBI guidelines.",
-      escalationReasonHi: "ऋण राशि ₹75L, ₹50L की सीमा से अधिक है। RBI दिशानिर्देशों के अनुसार रिलेशनशिप मैनेजर की समीक्षा आवश्यक है।",
+      escalationReason:
+        "Loan amount ₹75L exceeds ₹50L threshold. Requires Relationship Manager review per RBI guidelines.",
+      escalationReasonHi:
+        "ऋण राशि ₹75L, ₹50L की सीमा से अधिक है। RBI दिशानिर्देशों के अनुसार रिलेशनशिप मैनेजर की समीक्षा आवश्यक है।",
     },
   },
   {
@@ -158,17 +217,32 @@ export const MOCK_CUSTOMERS = [
     city: "Pune",
     avatar: "AK",
     avatarColor: "#00D68F",
-    searchHistory: ["best maternity hospital Pune", "child education plan", "baby products"],
+
+    // YONO in-app searches (child plan calculator, hospital loan queries)
+    yonoSearchHistory: [
+      "Child education plan SBI",
+      "Smart Scholar premium calculator",
+      "Maternity cover top-up",
+    ],
+    yonoSearchHistoryHi: [
+      "SBI बाल शिक्षा योजना",
+      "स्मार्ट स्कॉलर प्रीमियम कैलकुलेटर",
+      "मातृत्व कवर टॉप-अप",
+    ],
+
+    // SBI account CBS data — baby/medical category debits across all channels
     travelSpend: [2100, 1800, 900],
+
     existingProducts: ["Joint Savings Account", "Home Loan"],
+
     prediction: {
       lifeEvent: "Starting a Family",
       lifeEventHi: "परिवार शुरू करना",
       confidence: 78,
       reasoning:
-        "Searches for maternity hospitals and child education plans. Travel spending declining (nesting behaviour). Combined income is strong for family financial planning.",
+        "YONO app shows child education plan and maternity cover searches. SBI account transaction history shows rising baby/medical category debits (UPI, card, ATM — all channels tracked via CBS). Travel-category spend declining (nesting behaviour). Combined salary strong for family financial planning.",
       reasoningHi:
-        "मातृत्व अस्पतालों और बाल शिक्षा योजनाओं की खोजें। यात्रा खर्च घट रहा है (नेस्टिंग व्यवहार)। पारिवारिक वित्तीय योजना के लिए संयुक्त आय मजबूत है।",
+        "YONO ऐप में बाल शिक्षा योजना और मातृत्व कवर खोजें। SBI CBS में बेबी/मेडिकल श्रेणी खर्च बढ़ा (UPI, कार्ड, ATM — सभी चैनल)। यात्रा खर्च घट रहा है।",
       products: [
         {
           id: "child_plan",
@@ -223,17 +297,32 @@ export const MOCK_CUSTOMERS = [
     city: "Dubai → Kochi",
     avatar: "VN",
     avatarColor: "#FFB347",
-    searchHistory: ["NRE to resident account conversion", "property in Kochi", "DTAA India UAE"],
+
+    // YONO NRI app in-app searches (account conversion, FD maturity queries)
+    yonoSearchHistory: [
+      "NRE to RFC account conversion",
+      "FCNR maturity repatriation",
+      "DTAA India UAE SBI form",
+    ],
+    yonoSearchHistoryHi: [
+      "NRE से RFC खाता रूपांतरण",
+      "FCNR परिपक्वता प्रत्यावर्तन",
+      "DTAA भारत UAE SBI फॉर्म",
+    ],
+
+    // SBI CBS: international airline + India hotel debits, all channels (card, UPI, ATM)
     travelSpend: [25000, 31000, 42000],
+
     existingProducts: ["NRE Account", "NRO FD", "FCNR Deposit"],
+
     prediction: {
       lifeEvent: "NRI Returning to India",
       lifeEventHi: "भारत लौट रहा NRI",
       confidence: 83,
       reasoning:
-        "NRE-to-resident conversion queries, rising India travel spend, and property search in Kochi suggest imminent return. FCNR maturity planning needed.",
+        "YONO NRI app shows NRE-to-RFC conversion and FCNR maturity queries. SBI account transaction history shows rising India-hotel and domestic airline debits across all channels (card swipe, UPI, NEFT) over 3 months. FCNR maturity planning needed.",
       reasoningHi:
-        "NRE-से-निवासी रूपांतरण प्रश्न, बढ़ता भारत यात्रा खर्च और कोच्चि में प्रॉपर्टी खोज आसन्न वापसी का संकेत देते हैं।",
+        "YONO NRI ऐप में NRE-से-RFC रूपांतरण और FCNR परिपक्वता प्रश्न। SBI CBS में भारत-होटल और घरेलू एयरलाइन डेबिट बढ़ रहे हैं (सभी चैनल)।",
       products: [
         {
           id: "resident_account",
@@ -288,17 +377,32 @@ export const MOCK_CUSTOMERS = [
     city: "Varanasi",
     avatar: "SD",
     avatarColor: "#9B59B6",
-    searchHistory: ["senior citizen FD rates", "health insurance for 60 plus", "pension plan SBI"],
+
+    // YONO app in-app searches (FD calculator, pension plan pages viewed)
+    yonoSearchHistory: [
+      "Wecare Senior FD rates",
+      "SBI Annuity Deposit calculator",
+      "Arogya Premier health cover",
+    ],
+    yonoSearchHistoryHi: [
+      "वीकेयर सीनियर FD दरें",
+      "SBI वार्षिकी जमा कैलकुलेटर",
+      "आरोग्य प्रीमियर हेल्थ कवर",
+    ],
+
+    // SBI CBS — minimal transaction activity (retired); pharmacy category debits rising
     travelSpend: [800, 600, 400],
+
     existingProducts: ["Savings Account", "PPF", "LIC Policy"],
+
     prediction: {
       lifeEvent: "Retirement Planning",
       lifeEventHi: "सेवानिवृत्ति योजना",
       confidence: 91,
       reasoning:
-        "Last month salary credit is zero (retirement). Searches for senior citizen FD and health insurance. High corpus of ₹18.9L ready for deployment.",
+        "Last salary credit to SBI account is zero (retirement signal from passbook/CBS). YONO app shows FD calculator and pension plan page visits. SBI account transaction history shows pharmacy-category debits rising (across UPI, card, ATM channels — all tracked via CBS). High corpus of ₹18.9L ready for deployment.",
       reasoningHi:
-        "पिछले महीने वेतन क्रेडिट शून्य है (सेवानिवृत्ति)। वरिष्ठ नागरिक FD और स्वास्थ्य बीमा की खोजें। ₹18.9L का उच्च कोष तैयार।",
+        "SBI खाते में अंतिम वेतन क्रेडिट शून्य है (CBS/पासबुक से सेवानिवृत्ति संकेत)। YONO ऐप में FD कैलकुलेटर और पेंशन योजना पेज विजिट। SBI CBS में फार्मेसी-श्रेणी डेबिट बढ़ रहे हैं। ₹18.9L का उच्च कोष तैयार।",
       products: [
         {
           id: "sr_citizen_fd",

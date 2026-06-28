@@ -110,7 +110,7 @@ export default function Dashboard() {
   const { selectedCustomer, t, language, isLoadingCustomer } = useCustomer();
   const navigate = useNavigate();
 
-  const { prediction, creditScore, salaryCredits, balance, city, travelSpend, searchHistory } =
+  const { prediction, creditScore, salaryCredits, balance, city, travelSpend, yonoSearchHistory } =
     selectedCustomer;
 
   const formatCurrency = (n) =>
@@ -136,8 +136,7 @@ export default function Dashboard() {
   }));
 
   // Signal recency: last item is most recent
-  const signalWeights = [0.4, 0.6, 0.75, 1.0]; // opacity per position
-  const recentSearches = [...searchHistory].reverse();
+  const recentSearches = [...yonoSearchHistory].reverse();
 
   return (
     <div className="page-container" style={{ position: "relative" }}>
@@ -307,6 +306,15 @@ export default function Dashboard() {
           </span>
         </div>
 
+        {/* Compliance disclosure strip */}
+        <div style={styles.complianceStrip}>
+          <span style={styles.complianceDot} />
+          {t(
+            "All signals sourced exclusively from within the SBI ecosystem — YONO in-app activity & SBI card MCC-coded transactions. No browser history, no third-party app data.",
+            "सभी संकेत केवल SBI इकोसिस्टम से — YONO इन-ऐप गतिविधि और SBI कार्ड MCC लेनदेन। कोई ब्राउज़र हिस्ट्री या थर्ड-पार्टी डेटा नहीं।"
+          )}
+        </div>
+
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 14 }}>
 
           {/* Travel Spend — HERO SIGNAL (most weight, full treatment) */}
@@ -323,7 +331,7 @@ export default function Dashboard() {
               <div style={styles.signalTextBlock}>
                 <div style={styles.signalStrength}>
                   <span style={styles.signalStrengthDot} />
-                  {t("Strongest signal · Travel Spend", "सबसे मजबूत संकेत · यात्रा खर्च")}
+                  {t("Strongest signal · Card Travel Spend", "सबसे मजबूत संकेत · कार्ड यात्रा खर्च")}
                 </div>
                 <div style={styles.signalHeroTitle}>
                   ₹{travelSpend[travelSpend.length - 1].toLocaleString("en-IN")}
@@ -334,6 +342,7 @@ export default function Dashboard() {
                 <div style={styles.signalMeta}>
                   <Clock size={10} />
                   {t("Updated this month", "इस महीने अपडेट")}
+                  <span style={styles.sourceTag}>{t("Source: SBI Card MCC codes", "स्रोत: SBI कार्ड MCC")}</span>
                 </div>
               </div>
             </div>
@@ -381,7 +390,7 @@ export default function Dashboard() {
                     ...styles.signalTypeBadge,
                     opacity: isRecent ? 1 : 0.6,
                   }}>
-                    {t("Search", "खोज")}
+                    {t("YONO Search", "YONO खोज")}
                   </span>
                 </div>
               </motion.div>
@@ -404,7 +413,7 @@ export default function Dashboard() {
               )}
             </span>
             <span style={{ ...styles.signalTypeBadge, background: "rgba(0,214,143,0.1)", color: "var(--color-success)", borderColor: "rgba(0,214,143,0.2)", opacity: 0.7 }}>
-              {t("Income", "आय")}
+              {t("SBI Passbook", "SBI पासबुक")}
             </span>
           </motion.div>
 
@@ -434,6 +443,43 @@ const styles = {
     color: "var(--text-secondary)",
     fontWeight: 500,
   },
+  complianceStrip: {
+    display: "flex",
+    alignItems: "flex-start",
+    gap: 8,
+    marginTop: 10,
+    padding: "8px 14px",
+    background: "rgba(0, 214, 143, 0.04)",
+    border: "1px solid rgba(0, 214, 143, 0.12)",
+    borderRadius: "var(--radius-md)",
+    fontSize: "0.7rem",
+    color: "var(--text-muted)",
+    lineHeight: 1.55,
+  },
+  complianceDot: {
+    display: "inline-block",
+    width: 6,
+    height: 6,
+    borderRadius: "50%",
+    background: "var(--color-success)",
+    flexShrink: 0,
+    marginTop: 3,
+  },
+  sourceTag: {
+    display: "inline-block",
+    marginLeft: 8,
+    padding: "1px 7px",
+    background: "rgba(255, 179, 71, 0.1)",
+    border: "1px solid rgba(255, 179, 71, 0.2)",
+    borderRadius: "var(--radius-full)",
+    fontSize: "0.6rem",
+    fontWeight: 700,
+    color: "var(--color-warning)",
+    textTransform: "uppercase",
+    letterSpacing: "0.05em",
+    verticalAlign: "middle",
+  },
+
   statStrip: {
     display: "flex",
     gap: 8,
