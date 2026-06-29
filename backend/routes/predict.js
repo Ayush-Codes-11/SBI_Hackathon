@@ -35,6 +35,17 @@ router.post("/", async (req, res) => {
   } catch (err) {
     console.error(`[predict] ❌ Gemini call failed:`, err.message);
 
+    // Safety net fallback directly inside backend route
+    if (signals.prediction) {
+      console.log(`[predict] ⚠️ Serving fallback prediction statically for ${customerId}`);
+      return res.json({
+        customerId,
+        customerName: signals.name,
+        prediction: signals.prediction,
+        fallback: true,
+      });
+    }
+
     // Return a structured error so frontend can fall back to mock data gracefully
     return res.status(503).json({
       error: "AI prediction temporarily unavailable",

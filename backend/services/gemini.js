@@ -3,7 +3,7 @@
  * Wraps the Gemini Flash SDK. Builds a structured prompt from customer signals
  * and returns a typed JSON prediction object.
  *
- * Model: gemini-2.0-flash-lite (free tier, ~1500 req/day, no credit card)
+ * Model: gemini-2.5-flash (free tier, no credit card)
  */
 
 const { GoogleGenAI } = require("@google/genai");
