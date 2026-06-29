@@ -6,9 +6,9 @@
  * Model: gemini-2.0-flash-lite (free tier, ~1500 req/day, no credit card)
  */
 
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { GoogleGenAI } = require("@google/genai");
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // The product catalogue Gemini can recommend from
 const PRODUCT_CATALOGUE = [
@@ -109,17 +109,17 @@ Return this exact JSON structure:
 }
 
 async function predictLifeEvent(signals) {
-  const model = genAI.getGenerativeModel({
-    model: "gemini-2.0-flash-lite",
-    generationConfig: {
+  const prompt = buildPrompt(signals);
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: prompt,
+    config: {
       responseMimeType: "application/json", // forces valid JSON output
       temperature: 0.3,                     // low temp = consistent, structured
     },
   });
 
-  const prompt = buildPrompt(signals);
-  const result = await model.generateContent(prompt);
-  const text = result.response.text();
+  const text = response.text;
 
   // Parse and validate
   let parsed;
