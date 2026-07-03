@@ -3,7 +3,7 @@
  * Express server with CORS for the Vite frontend on :5173
  */
 
-require("dotenv").config();
+require("dotenv").config({ override: true }); // override: true forces .env to win over stale system env vars
 const express = require("express");
 const cors = require("cors");
 
