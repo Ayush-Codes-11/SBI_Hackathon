@@ -2,266 +2,220 @@ import React, { useState, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ChevronDown,
-  Globe,
-  Bell,
-  Zap,
-  User,
-  LayoutDashboard,
-  Brain,
-  GitBranch,
-  CheckCircle2,
-  Settings,
+  ChevronDown, Globe, Bell, Zap, User,
+  LayoutDashboard, Brain, GitBranch, CheckCircle2, Settings,
 } from "lucide-react";
 import { useCustomer } from "../context/CustomerContext";
 import { MOCK_CUSTOMERS } from "../data/mockCustomers";
 import SettingsPanel from "./SettingsPanel";
 
 const NAV_LINKS = [
-  { to: "/",            icon: LayoutDashboard, labelEn: "Dashboard",    labelHi: "डैशबोर्ड" },
-  { to: "/life-event",  icon: Brain,           labelEn: "Life Events",  labelHi: "जीवन घटनाएं" },
-  { to: "/journey",     icon: GitBranch,       labelEn: "My Journey",   labelHi: "मेरी यात्रा" },
-  { to: "/confirmation",icon: CheckCircle2,    labelEn: "Confirmation", labelHi: "पुष्टि" },
+  { to: "/",             icon: LayoutDashboard, labelEn: "Dashboard",    labelHi: "डैशबोर्ड" },
+  { to: "/life-event",   icon: Brain,           labelEn: "Life Events",  labelHi: "जीवन घटनाएं" },
+  { to: "/journey",      icon: GitBranch,       labelEn: "My Journey",   labelHi: "मेरी यात्रा" },
+  { to: "/confirmation", icon: CheckCircle2,    labelEn: "Confirmation", labelHi: "पुष्टि" },
 ];
 
 export default function Navbar() {
   const { selectedCustomer, setSelectedCustomer, isLoadingCustomer, language, toggleLanguage, t } = useCustomer();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifOpen,    setNotifOpen]    = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const location = useLocation();
-  const dropRef = useRef(null);
+  const dropRef  = useRef(null);
 
   const notifCount = selectedCustomer.prediction.escalate ? 1 : 0;
 
   return (
     <>
       <nav style={styles.nav}>
-      <div style={styles.inner}>
-        {/* Logo */}
-        <Link to="/" style={styles.logo}>
-          <div style={styles.logoIcon}>
-            <Zap size={16} color="#fff" strokeWidth={2.5} />
-          </div>
-          <div>
-            <span style={styles.logoTextMain}>SBI</span>
-            <span style={styles.logoTextSub}> LifeAI</span>
-          </div>
-        </Link>
+        <div style={styles.inner}>
 
-        {/* Nav links (desktop) */}
-        <div style={styles.navLinks}>
-          {NAV_LINKS.map(({ to, icon: Icon, labelEn, labelHi }) => {
-            const active = location.pathname === to;
-            return (
-              <Link
-                key={to}
-                to={to}
-                style={{
-                  ...styles.navLink,
-                  ...(active ? styles.navLinkActive : {}),
-                }}
-              >
-                <Icon size={15} />
-                {t(labelEn, labelHi)}
-                {active && <motion.div layoutId="nav-pill" style={styles.activePill} />}
-              </Link>
-            );
-          })}
-        </div>
+          {/* ── Logo ── */}
+          <Link to="/" style={styles.logo}>
+            <div style={styles.logoIcon}>
+              <Zap size={16} color="#fff" strokeWidth={2.5} />
+            </div>
+            <div>
+              <span style={styles.logoTextMain}>SBI</span>
+              <span style={styles.logoTextSub}> LifeAI</span>
+            </div>
+          </Link>
 
-        {/* Right controls */}
-        <div style={styles.controls}>
-          {/* Language toggle */}
-          <button
-            onClick={toggleLanguage}
-            style={styles.controlBtn}
-            title="Toggle language"
-          >
-            <Globe size={16} />
-            <span style={{ fontSize: "0.78rem", fontWeight: 700 }}>
-              {language === "en" ? "EN" : "HI"}
-            </span>
-          </button>
-
-          {/* Settings */}
-          <button
-            onClick={() => setSettingsOpen(true)}
-            style={styles.controlBtn}
-            title="Settings & Profile"
-            aria-label="Open settings"
-          >
-            <Settings size={16} />
-          </button>
-
-          {/* Notifications */}
-          <div style={{ position: "relative" }}>
-            <button
-              onClick={() => setNotifOpen((o) => !o)}
-              style={styles.controlBtn}
-            >
-              <Bell size={16} />
-              {notifCount > 0 && (
-                <span style={styles.notifBadge}>{notifCount}</span>
-              )}
-            </button>
-            <AnimatePresence>
-              {notifOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  style={styles.notifDropdown}
+          {/* ── Nav links ── */}
+          <div style={styles.navLinks}>
+            {NAV_LINKS.map(({ to, icon: Icon, labelEn, labelHi }) => {
+              const active = location.pathname === to;
+              return (
+                <Link
+                  key={to}
+                  to={to}
+                  style={{ ...styles.navLink, ...(active ? styles.navLinkActive : {}) }}
                 >
-                  {notifCount > 0 ? (
-                    <div style={styles.notifItem}>
-                      <span style={{ color: "var(--color-danger)" }}>⚠️</span>
-                      <div>
-                        <div style={{ fontWeight: 600, fontSize: "0.85rem" }}>
-                          {t("RM Escalation Required", "RM समीक्षा आवश्यक")}
-                        </div>
-                        <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>
-                          {selectedCustomer.name} — {t("High-value loan", "उच्च-मूल्य ऋण")}
+                  <Icon size={15} />
+                  {t(labelEn, labelHi)}
+                  {active && <motion.div layoutId="nav-pill" style={styles.activePill} />}
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* ── Right controls ── */}
+          <div style={styles.controls}>
+
+            {/* Language toggle */}
+            <button onClick={toggleLanguage} style={styles.controlBtn} title="Toggle language">
+              <Globe size={16} />
+              <span style={{ fontSize: "0.78rem", fontWeight: 700 }}>
+                {language === "en" ? "EN" : "HI"}
+              </span>
+            </button>
+
+            {/* Settings gear */}
+            <button
+              onClick={() => setSettingsOpen(true)}
+              style={styles.controlBtn}
+              title="Settings & Profile"
+              aria-label="Open settings"
+            >
+              <Settings size={16} />
+            </button>
+
+            {/* Notifications */}
+            <div style={{ position: "relative" }}>
+              <button onClick={() => setNotifOpen((o) => !o)} style={styles.controlBtn}>
+                <Bell size={16} />
+                {notifCount > 0 && <span style={styles.notifBadge}>{notifCount}</span>}
+              </button>
+              <AnimatePresence>
+                {notifOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    style={styles.notifDropdown}
+                  >
+                    {notifCount > 0 ? (
+                      <div style={styles.notifItem}>
+                        <span style={{ color: "var(--color-danger)" }}>⚠️</span>
+                        <div>
+                          <div style={{ fontWeight: 600, fontSize: "0.85rem" }}>
+                            {t("RM Escalation Required", "RM समीक्षा आवश्यक")}
+                          </div>
+                          <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>
+                            {selectedCustomer.name} — {t("High-value loan", "उच्च-मूल्य ऋण")}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div style={{ padding: "12px 16px", color: "var(--text-muted)", fontSize: "0.85rem" }}>
-                      {t("No new notifications", "कोई नई सूचना नहीं")}
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+                    ) : (
+                      <div style={{ padding: "12px 16px", color: "var(--text-muted)", fontSize: "0.85rem" }}>
+                        {t("No new notifications", "कोई नई सूचना नहीं")}
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-          {/* Customer switcher */}
-          <div style={{ position: "relative" }} ref={dropRef}>
-            {/* Discoverable hint label */}
-            {!dropdownOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                style={styles.switcherHint}
-              >
-                {t("↓ Try other profiles", "↓ प्रोफ़ाइल बदलें")}
-              </motion.div>
-            )}
-            <motion.button
-              onClick={() => setDropdownOpen((o) => !o)}
-              style={{
-                ...styles.customerBtn,
-                borderColor: dropdownOpen ? "rgba(26,115,232,0.4)" : undefined,
-              }}
-              whileHover={{ borderColor: "rgba(26,115,232,0.35)" }}
-            >
-              {/* Pulsing ring to draw attention */}
+            {/* Customer switcher */}
+            <div style={{ position: "relative" }} ref={dropRef}>
               {!dropdownOpen && (
                 <motion.div
-                  animate={{ scale: [1, 1.18, 1], opacity: [0.6, 0, 0.6] }}
-                  transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
-                  style={styles.switcherPulseRing}
-                />
-              )}
-              <div
-                style={{
-                  ...styles.avatar,
-                  background: isLoadingCustomer ? "var(--color-surface-3)" : selectedCustomer.avatarColor,
-                  transition: "background 0.3s",
-                }}
-              >
-                {isLoadingCustomer ? (
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
-                    style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%" }}
-                  />
-                ) : selectedCustomer.avatar}
-              </div>
-              <div style={styles.customerInfo}>
-                <span style={styles.customerName}>
-                  {language === "hi"
-                    ? selectedCustomer.nameHi
-                    : selectedCustomer.name}
-                </span>
-                <span style={styles.customerAcc}>
-                  {selectedCustomer.accountNumber}
-                </span>
-              </div>
-              <ChevronDown
-                size={14}
-                color="var(--text-secondary)"
-                style={{
-                  transition: "transform 200ms",
-                  transform: dropdownOpen ? "rotate(180deg)" : "none",
-                }}
-              />
-            </motion.button>
-
-            <AnimatePresence>
-              {dropdownOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8, scale: 0.97 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -8, scale: 0.97 }}
-                  transition={{ duration: 0.15 }}
-                  style={styles.dropdown}
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  style={styles.switcherHint}
                 >
-                  <div style={styles.dropdownHeader}>
-                    <User size={12} />
-                    {t("Switch Customer Profile", "ग्राहक प्रोफ़ाइल बदलें")}
-                  </div>
-                  {MOCK_CUSTOMERS.map((c) => (
-                    <button
-                      key={c.id}
-                      onClick={() => {
-                        setSelectedCustomer(c);
-                        setDropdownOpen(false);
-                      }}
-                      style={{
-                        ...styles.dropdownItem,
-                        ...(c.id === selectedCustomer.id
-                          ? styles.dropdownItemActive
-                          : {}),
-                      }}
-                    >
-                      <div
-                        style={{
-                          ...styles.avatarSm,
-                          background: c.avatarColor,
-                        }}
-                      >
-                        {c.avatar}
-                      </div>
-                      <div style={{ textAlign: "left" }}>
-                        <div style={{ fontWeight: 600, fontSize: "0.85rem" }}>
-                          {language === "hi" ? c.nameHi : c.name}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: "0.72rem",
-                            color: "var(--text-muted)",
-                          }}
-                        >
-                          {language === "hi"
-                            ? c.prediction.lifeEventHi
-                            : c.prediction.lifeEvent}{" "}
-                          · {c.prediction.confidence}%
-                        </div>
-                      </div>
-                      {c.prediction.escalate && (
-                        <span style={{ marginLeft: "auto", fontSize: "0.7rem", color: "var(--color-danger)" }}>
-                          ⚠️ RM
-                        </span>
-                      )}
-                    </button>
-                  ))}
+                  {t("↓ Try other profiles", "↓ प्रोफ़ाइल बदलें")}
                 </motion.div>
               )}
-            </AnimatePresence>
-          </div>
-        </div>
+
+              <motion.button
+                onClick={() => setDropdownOpen((o) => !o)}
+                style={{ ...styles.customerBtn, borderColor: dropdownOpen ? "rgba(26,115,232,0.4)" : undefined }}
+                whileHover={{ borderColor: "rgba(26,115,232,0.35)" }}
+              >
+                {!dropdownOpen && (
+                  <motion.div
+                    animate={{ scale: [1, 1.18, 1], opacity: [0.6, 0, 0.6] }}
+                    transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
+                    style={styles.switcherPulseRing}
+                  />
+                )}
+                <div
+                  style={{
+                    ...styles.avatar,
+                    background: isLoadingCustomer ? "var(--color-surface-3)" : selectedCustomer.avatarColor,
+                    transition: "background 0.3s",
+                  }}
+                >
+                  {isLoadingCustomer ? (
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+                      style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%" }}
+                    />
+                  ) : selectedCustomer.avatar}
+                </div>
+                <div style={styles.customerInfo}>
+                  <span style={styles.customerName}>
+                    {language === "hi" ? selectedCustomer.nameHi : selectedCustomer.name}
+                  </span>
+                  <span style={styles.customerAcc}>{selectedCustomer.accountNumber}</span>
+                </div>
+                <ChevronDown
+                  size={14}
+                  color="var(--text-secondary)"
+                  style={{ transition: "transform 200ms", transform: dropdownOpen ? "rotate(180deg)" : "none" }}
+                />
+              </motion.button>
+
+              <AnimatePresence>
+                {dropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                    transition={{ duration: 0.15 }}
+                    style={styles.dropdown}
+                  >
+                    <div style={styles.dropdownHeader}>
+                      <User size={12} />
+                      {t("Switch Customer Profile", "ग्राहक प्रोफ़ाइल बदलें")}
+                    </div>
+                    {MOCK_CUSTOMERS.map((c) => (
+                      <button
+                        key={c.id}
+                        onClick={() => { setSelectedCustomer(c); setDropdownOpen(false); }}
+                        style={{ ...styles.dropdownItem, ...(c.id === selectedCustomer.id ? styles.dropdownItemActive : {}) }}
+                      >
+                        <div style={{ ...styles.avatarSm, background: c.avatarColor }}>
+                          {c.avatar}
+                        </div>
+                        <div style={{ textAlign: "left" }}>
+                          <div style={{ fontWeight: 600, fontSize: "0.85rem" }}>
+                            {language === "hi" ? c.nameHi : c.name}
+                          </div>
+                          <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
+                            {language === "hi" ? c.prediction.lifeEventHi : c.prediction.lifeEvent}{" "}
+                            · {c.prediction.confidence}%
+                          </div>
+                        </div>
+                        {c.prediction.escalate && (
+                          <span style={{ marginLeft: "auto", fontSize: "0.7rem", color: "var(--color-danger)" }}>
+                            ⚠️ RM
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+          </div>{/* end controls */}
+        </div>{/* end inner */}
       </nav>
+
       {/* YONO Settings side drawer */}
       <SettingsPanel isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </>
@@ -434,7 +388,6 @@ const styles = {
     whiteSpace: "nowrap",
     pointerEvents: "none",
   },
-
   avatar: {
     width: 32,
     height: 32,
