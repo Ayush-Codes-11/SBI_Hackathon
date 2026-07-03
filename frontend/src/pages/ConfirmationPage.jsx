@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, Download, RotateCcw, UserCheck, Share2, ArrowRight } from "lucide-react";
+import { CheckCircle2, Download, RotateCcw, UserCheck, Share2, ArrowRight, AlertTriangle, Mail } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCustomer } from "../context/CustomerContext";
+import { sendEscalationEmail } from "../services/emailjs";
 
 /* Confetti particle */
 const CONFETTI_COLORS = ["#1A73E8", "#00C6FF", "#00D68F", "#FFB347", "#FF4E6A", "#9B59B6"];
@@ -46,9 +47,21 @@ export default function ConfirmationPage() {
   const activated = getActivatedProducts(selectedCustomer.id);
   const navigate = useNavigate();
   const hasPlayed = useRef(false);
+  const hasEscalated = useRef(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   const activatedProducts = prediction.products.filter((p) => activated[p.id]);
   const allDone = activatedProducts.length === prediction.products.length;
+
+  // Fire RM escalation email when loan > ₹50L (RBI requirement)
+  useEffect(() => {
+    if (prediction.escalate && !hasEscalated.current) {
+      hasEscalated.current = true;
+      sendEscalationEmail(selectedCustomer, prediction).then((sent) => {
+        setEmailSent(sent);
+      });
+    }
+  }, [prediction.escalate]);
 
   useEffect(() => {
     if (!hasPlayed.current && "speechSynthesis" in window) {
@@ -70,7 +83,38 @@ export default function ConfirmationPage() {
     <div className="page-container" style={{ maxWidth: 760, margin: "0 auto" }}>
       <Confetti />
 
-      {/* Success hero */}
+      {/* RM Escalation notice — visible to judges when escalate:true */}
+      {prediction.escalate && (
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          style={styles.escalationBanner}
+        >
+          <AlertTriangle size={18} color="#FFB347" style={{ flexShrink: 0 }} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontWeight: 700, fontSize: "0.88rem", color: "#FFB347" }}>
+              {t("RM Escalation Triggered", "RM एस्केलेशन ट्रिगर हुआ")}
+            </div>
+            <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", marginTop: 2 }}>
+              {prediction.escalationReason ||
+                t(
+                  "Loan amount exceeds ₹50L — RBI Digital Lending Guidelines 2022 require Relationship Manager review.",
+                  "ऋण ₹50L से अधिक — RBI दिशानिर्देश 2022 के अनुसार RM समीक्षा आवश्यक।"
+                )}
+            </div>
+          </div>
+          <div style={styles.emailStatus}>
+            <Mail size={13} color={emailSent ? "#00D68F" : "var(--text-muted)"} />
+            <span style={{ fontSize: "0.7rem", color: emailSent ? "#00D68F" : "var(--text-muted)" }}>
+              {emailSent
+                ? t("Email sent to RM", "RM को ईमेल भेजा")
+                : t("RM alert logged", "RM अलर्ट लॉग किया")}
+            </span>
+          </div>
+        </motion.div>
+      )}
+
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -401,5 +445,23 @@ const styles = {
     fontWeight: 600,
     color: "var(--color-primary-light)",
     textDecoration: "none",
+  },
+  escalationBanner: {
+    display: "flex",
+    alignItems: "flex-start",
+    gap: 12,
+    padding: "14px 18px",
+    marginBottom: 20,
+    background: "rgba(255, 179, 71, 0.08)",
+    border: "1px solid rgba(255, 179, 71, 0.3)",
+    borderRadius: "var(--radius-lg)",
+    boxShadow: "0 0 20px rgba(255, 179, 71, 0.08)",
+  },
+  emailStatus: {
+    display: "flex",
+    alignItems: "center",
+    gap: 4,
+    flexShrink: 0,
+    marginTop: 2,
   },
 };

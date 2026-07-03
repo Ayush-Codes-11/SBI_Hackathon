@@ -11,9 +11,11 @@ import {
   Brain,
   GitBranch,
   CheckCircle2,
+  Settings,
 } from "lucide-react";
 import { useCustomer } from "../context/CustomerContext";
 import { MOCK_CUSTOMERS } from "../data/mockCustomers";
+import SettingsPanel from "./SettingsPanel";
 
 const NAV_LINKS = [
   { to: "/",            icon: LayoutDashboard, labelEn: "Dashboard",    labelHi: "डैशबोर्ड" },
@@ -26,13 +28,15 @@ export default function Navbar() {
   const { selectedCustomer, setSelectedCustomer, isLoadingCustomer, language, toggleLanguage, t } = useCustomer();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const location = useLocation();
   const dropRef = useRef(null);
 
   const notifCount = selectedCustomer.prediction.escalate ? 1 : 0;
 
   return (
-    <nav style={styles.nav}>
+    <>
+      <nav style={styles.nav}>
       <div style={styles.inner}>
         {/* Logo */}
         <Link to="/" style={styles.logo}>
@@ -78,6 +82,16 @@ export default function Navbar() {
             <span style={{ fontSize: "0.78rem", fontWeight: 700 }}>
               {language === "en" ? "EN" : "HI"}
             </span>
+          </button>
+
+          {/* Settings */}
+          <button
+            onClick={() => setSettingsOpen(true)}
+            style={styles.controlBtn}
+            title="Settings & Profile"
+            aria-label="Open settings"
+          >
+            <Settings size={16} />
           </button>
 
           {/* Notifications */}
@@ -247,8 +261,10 @@ export default function Navbar() {
             </AnimatePresence>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+      {/* YONO Settings side drawer */}
+      <SettingsPanel isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
+    </>
   );
 }
 
