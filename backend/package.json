@@ -1,7 +1,7 @@
 {
-  "name": "sbi-lifeai-backend",
+  "name": "sbi-saarthi-backend",
   "version": "1.0.0",
-  "description": "SBI LifeAI backend — Express + Gemini prediction engine",
+  "description": "SBI Saarthi backend - Express + Gemini prediction engine",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

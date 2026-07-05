@@ -1,5 +1,5 @@
 /**
- * server.js — SBI LifeAI Backend
+ * server.js — SBI Saarthi Backend
  * Express server with CORS for the Vite frontend on :5173
  */
 
@@ -33,7 +33,7 @@ app.use("/api/predict", predictRouter);
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
-    service: "SBI LifeAI Backend",
+    service: "SBI Saarthi Backend",
     geminiConfigured: !!process.env.GEMINI_API_KEY,
     timestamp: new Date().toISOString(),
   });
@@ -41,7 +41,7 @@ app.get("/api/health", (req, res) => {
 
 // ── Start ────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`\n🚀 SBI LifeAI backend running on http://localhost:${PORT}`);
+  console.log(`\n🚀 SBI Saarthi backend running on http://localhost:${PORT}`);
   console.log(`   Gemini API key: ${process.env.GEMINI_API_KEY ? "✅ configured" : "❌ MISSING — set GEMINI_API_KEY in .env"}`);
   console.log(`   Health check:   http://localhost:${PORT}/api/health\n`);
 });

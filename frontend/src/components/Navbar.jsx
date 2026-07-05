@@ -38,7 +38,7 @@ export default function Navbar() {
             </div>
             <div>
               <span style={styles.logoTextMain}>SBI</span>
-              <span style={styles.logoTextSub}> LifeAI</span>
+              <span style={styles.logoTextSub}> Saarthi</span>
             </div>
           </Link>
 

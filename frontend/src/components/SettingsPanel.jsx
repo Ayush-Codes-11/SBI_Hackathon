@@ -422,7 +422,7 @@ export default function SettingsPanel({ isOpen, onClose }) {
 
             {/* Footer */}
             <div style={styles.drawerFooter}>
-              <div style={styles.footerText}>SBI YONO LifeAI · v2.1.0</div>
+              <div style={styles.footerText}>SBI Saarthi · v2.1.0</div>
               <div style={styles.footerText}>
                 {t("Customer ID:", "ग्राहक ID:")} {selectedCustomer.id}
               </div>

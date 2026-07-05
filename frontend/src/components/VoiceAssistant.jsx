@@ -9,7 +9,7 @@ const RESPONSES_EN = {
   insurance: "SBI Travel Insurance covers medical emergencies, trip cancellation, and baggage loss. Would you like to activate it now?",
   balance: "Your current savings account balance is one lakh twenty eight thousand four hundred and fifty rupees.",
   score: "Your credit score is 748, which is excellent. This qualifies you for our best loan rates.",
-  hello: "Namaste! I am your SBI LifeAI assistant. I can help you with loans, forex cards, insurance, and more. How can I assist you today?",
+  hello: "Namaste! I am your SBI Saarthi assistant. I can help you with loans, forex cards, insurance, and more. How can I assist you today?",
   default: "I understand your request. Our banking advisors are here to help. Would you like me to connect you with a Relationship Manager?",
 };
 
@@ -19,7 +19,7 @@ const RESPONSES_HI = {
   insurance: "SBI यात्रा बीमा चिकित्सा आपात, यात्रा रद्दीकरण और सामान हानि को कवर करता है। क्या आप इसे अभी सक्रिय करना चाहेंगे?",
   balance: "आपके बचत खाते में वर्तमान शेष एक लाख अट्ठाईस हजार चार सौ पचास रुपये है।",
   score: "आपका क्रेडिट स्कोर 748 है, जो उत्कृष्ट है। यह आपको हमारी सर्वोत्तम ऋण दरों के लिए योग्य बनाता है।",
-  hello: "नमस्ते! मैं आपका SBI LifeAI सहायक हूं। मैं ऋण, फॉरेक्स कार्ड, बीमा और अधिक में आपकी सहायता कर सकता हूं।",
+  hello: "नमस्ते! मैं आपका SBI Saarthi सहायक हूं। मैं ऋण, फॉरेक्स कार्ड, बीमा और अधिक में आपकी सहायता कर सकता हूं।",
   default: "मैं आपका अनुरोध समझता हूं। हमारे बैंकिंग सलाहकार आपकी सहायता के लिए यहां हैं। क्या मैं आपको एक संबंध प्रबंधक से जोड़ूं?",
 };
 
@@ -147,7 +147,7 @@ export default function VoiceAssistant() {
             <div style={styles.panelHeader}>
               <div style={styles.panelTitle}>
                 <div style={styles.aiDot} />
-                <span>{t("SBI LifeAI Voice", "SBI LifeAI वॉयस")}</span>
+                <span>{t("SBI Saarthi Voice", "SBI Saarthi वॉयस")}</span>
               </div>
               <div style={styles.langToggleRow}>
                 <button
@@ -247,7 +247,7 @@ export default function VoiceAssistant() {
               >
                 <div style={styles.responseLabel}>
                   <div style={styles.aiDot} />
-                  {t("SBI LifeAI", "SBI LifeAI")}
+                  {t("SBI Saarthi", "SBI Saarthi")}
                 </div>
                 <p style={styles.responseText}>{response}</p>
               </motion.div>

@@ -1,8 +1,8 @@
-# SBI LifeAI — AI-Powered Life Event Engine & Relationship Manager
+# SBI Saarthi — AI Life Event Engine & Relationship Manager
 
 > **SBI Hackathon Prototype** · Built with React + Node.js + Gemini 2.0 Flash
 
-SBI LifeAI is an intelligent middleware overlay between SBI's Core Banking System (CBS) / YONO app activity and the customer journey. It predicts life events in real-time, recommends tailored product bundles, and includes a regulatory human-escalation layer — all within the look and feel of the real YONO app.
+SBI Saarthi is an intelligent middleware overlay between SBI's Core Banking System (CBS) / YONO app activity and the customer journey. It predicts life events in real-time, recommends tailored product bundles, and includes a regulatory human-escalation layer — all within the look and feel of the real YONO app.
 
 ---
 
@@ -222,4 +222,4 @@ Built for **SBI Hackathon 2026** — 3-minute demo prototype showcasing how AI c
 
 ---
 
-*SBI YONO LifeAI · v2.1.0*
+*SBI Saarthi · v2.1.0*

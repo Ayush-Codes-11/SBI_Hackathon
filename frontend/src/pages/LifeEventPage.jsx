@@ -37,8 +37,8 @@ export default function LifeEventPage() {
         </h1>
         <p style={styles.pageSubtitle}>
           {t(
-            "Based on real-time analysis of your financial signals, here is what SBI LifeAI has detected and recommends for you.",
-            "आपके वित्तीय संकेतों के रीयल-टाइम विश्लेषण के आधार पर, यहां SBI LifeAI ने जो पता लगाया और अनुशंसित किया है।"
+            "Based on real-time analysis of your financial signals, here is what SBI Saarthi has detected and recommends for you.",
+            "आपके वित्तीय संकेतों के रीयल-टाइम विश्लेषण के आधार पर, यहां SBI Saarthi ने जो पता लगाया और अनुशंसित किया है।"
           )}
         </p>
       </motion.div>
